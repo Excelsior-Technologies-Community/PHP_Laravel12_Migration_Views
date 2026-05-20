@@ -199,7 +199,7 @@
         <div class="pagination-wrapper">
             {{ $data->appends(request()->query())->links() }}
         </div>
-
+        
     </div>
 
 </body>
