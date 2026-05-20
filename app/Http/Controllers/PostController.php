@@ -8,11 +8,20 @@ use App\Models\UserPostView;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data = UserPostView::all();
-        $users = DB::table('users')->get();  // Add this
-        return view('user-posts', compact('data', 'users'));
+        $query = UserPostView::query();
+
+        //  SEARCH FUNCTIONALITY
+        if ($request->has('search') && $request->search != '') {
+            $query->where('name', 'like', '%' . $request->search . '%')
+                  ->orWhere('title', 'like', '%' . $request->search . '%');
+        }
+
+        //  PAGINATION
+        $data = $query->orderBy('user_id', 'asc')->paginate(3);
+
+        return view('user-posts', compact('data'));
     }
 
     public function create()
